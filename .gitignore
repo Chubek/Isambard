@@ -1,0 +1,40 @@
+# Haskell related files and directories
+dist/
+cabal-dev/
+*.o
+*.hi
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+.hpc/
+.hsenv/
+.cabal-sandbox/
+
+# Stack specific
+.stack-work/
+
+# GHC tags file
+tags
+
+# Editors
+*~
+*.swp
+.vscode/
+.idea/
+
+# Compiled binary executables
+*.exe
+*.out
+
+# Dependency directories
+vendor/
+
+# Ignore hie and HLS files
+.hie/
+.hie.yaml
+.haskell-language-server-8.10.4.sock
+
+
+# Exectuable
+isambard
