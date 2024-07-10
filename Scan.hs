@@ -40,7 +40,7 @@ data Keyword
     | While
     | With
 
-data Delim 
+data Delimiter
     = LBrace
     | RBrace
     | LParen
@@ -48,22 +48,23 @@ data Delim
     | LBrack
     | RBrack
 
-data Symbol
+data Punctuation
     = Semicolon
     | Comma
     | Colon
     | Period
+    | Atsign
+    | Caret
 
-data Token
+data Lexeme
     = CharString String
-    | Identifier Ident
+    | Identifier Ident (Maybe Punctuation)
     | Integer Int
     | Rational Float
     | Keyword Keyword
     | Label Int
-    | Delimiter Delim
-    | Symbol Symbol
-
-
+    | Delimiter Delimiter
+    | Punctuation Punctuation
+    | Comment String
 
 
