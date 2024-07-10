@@ -1,6 +1,4 @@
-module Scanner where
-
-import System.IO
+module IsambardScanner where
 
 import Data.Char (isAlpha, isAlphaNum)
 import Data.List (find)
@@ -99,11 +97,12 @@ data Lexeme
     | Delimiter Delimiter
     | Punctuation Punctuation
     | Comment String
+    | EndOfFile
     deriving (Show, Eq)
 
 
 scanIsambard :: String -> [Lexeme]
-scanIsambard [] = []
+scanIsambard [] = [EndOfFile]
 scanIsambard (c:cs)
   | isSpace c = scanIsambard cs
   | isDigit c =
@@ -187,4 +186,8 @@ strToOperator ">=" = GreaterEqual
 strToOperator "==" = Equals
 strToOperator "<>" = NotEquals
 strToOperatpr ":=" = Assign
+strToOperator _ = error "Not an operator"
+
+
+
 
