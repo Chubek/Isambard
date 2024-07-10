@@ -1,0 +1,23 @@
+name:                isambard
+version:             1.0.0.0
+synopsis:            An implementation of ISO Pascal
+description:         This program implements an optimizing compiler for ISO Pascal
+
+license:             MIT
+
+maintainer:          chubakbidpaa@gmail.com
+
+library
+  exposed-modules:     IsambardMain
+
+  default-language:    Haskell2010
+  build-depends:
+    base >= 4.7 && < 5,
+    unordered-containers >= 0.2 && < 0.3
+
+executable isambard
+   main-is:             Main.hs
+   build-depends:
+	base,
+	isambard
+
