@@ -25,7 +25,7 @@ data Keyword
     | Goto
     | If
     | In
-    | Lable
+    | Label
     | Mod
     | Nil
     | Not
@@ -64,9 +64,34 @@ data Punctuation
     | Caret
     deriving (Show, Eq)
 
+data Operator
+    = Plus
+    | Minus
+    | Times
+    | Modulo
+    | Divide
+    | Power
+    | Increase
+    | Decrease
+    | Greater
+    | GreaterEqual
+    | Lesser
+    | LesserEqual
+    | Equals
+    | NotEquals
+    | Reference
+    | AddressOf
+    | Assign
+    | BitwiseAnd
+    | BitwiseOr
+    | BitwiseXor
+    | LogicalAnd
+    | LogicalOr
+
 data Lexeme
     = CharString String
-    | Identifier Ident (Maybe Punctuation)
+    | Identifier Ident
+    | Operator Operator
     | Integer Int
     | Rational Float
     | Keyword Keyword
@@ -90,9 +115,15 @@ scanIsambard (c:cs)
      let (idStr, rest) = span isIdChar (c:cs)
      in case classifyIdentifier idStr of
        Just keyword -> Keyword keyword : scanIsambard rest
-       Nothing -> Identifier idStr Nothing : scanIsambard rest
+       Nothing -> Identifier idStr : scanIsambard rest
   | c `elem` "{}[]()" = Delimiter (charToDelimiter c) : scanIsambard cs
-  | c `elem` ";,.:@^" = Punctuation (charToPunctuation c) : scanIsambard cs
+  | c `elem` ";,.:@^" = 
+      if (head cs) `eq` '='
+      then Operator Assign : scanIsambard (tail cs)
+      else Punctuation (charToPunctuation c) : scanIsambard cs
+  | c `elem` "=:+-*/^&|$@"
+      let (opStr, rest) = span (\x -> x `elem` "=:+-*/^&|$@") (c:cs)
+      in Operator (strToOperator opStr) : scanIsambard rest
   | c == '{' =
     let (comment, rest) = span (/= '}') cs
     in Comment comment : scanIsambard (drop 1 rest)
@@ -107,7 +138,7 @@ classifyIdentifier ident =
 allKeywords :: [Keyword]
 allKeywords = [ And, Array, Begin, Case, Const, Div, Do, Downto
               , Else, End, File, For, Function, Goto, If, In
-              , Lable, Mod, Nil, Not, Of, Or, Packed, Procedure
+              , Label, Mod, Nil, Not, Of, Or, Packed, Procedure
               , Program, Record, Repeat, Set, Then, To, Type, Until
               , Var, While, With
               ]
@@ -133,6 +164,27 @@ charToPunctuation '@' = Atsign
 charToPunctuation '^' = Caret
 charToPunctuation _   = error "Not a punctuation"
 
-
-
+strToOperator ::= String -> Operator
+strToOperator "+" = Plus
+strToOperator "-" = Minus
+strToOperator "*" = Times
+strToOperator "/" = Divide
+strToOperator "%" = Modulo
+strToOperator "**" = Power
+strToOperator "++" = Increase
+strToOperator "--" = Decrease
+strToOperator "&" = BitwiseAnd
+strToOperator "|" = BitwiseOr
+strToOperator "$" = BitwiseXor
+strToOperator "&&" = LogicalAnd
+strToOperator "||" = LogicalOr
+strToOperator "@" = AddressOf
+strToOperator "^" = Reference
+strToOperator "<" = Lesser
+strToOperator "<=" = LesserEqual
+strToOperator ">" = Greater
+strToOperator ">=" = GreaterEqual
+strToOperator "==" = Equals
+strToOperator "<>" = NotEquals
+strToOperatpr ":=" = Assign
 
